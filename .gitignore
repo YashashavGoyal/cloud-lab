@@ -1,0 +1,33 @@
+# Local .terraform directories
+**/.terraform/
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Crash logs
+crash.log
+crash.*.log
+
+# Exclude all .tfvars files that might contain sensitive data
+# Note: sample tfvars like terraform.tfvars.example can be committed if sanitized
+*.tfvars
+!*.tfvars.example
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
+
+# Sensitive secrets / keys
+*.pem
+*.key
+*.pub
+secrets.json
+
+# IDE / OS specific files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+[Dd]esktop.ini
