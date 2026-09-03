@@ -19,6 +19,7 @@ cloudlab/
 │
 ├── docs/                      # Architecture, security & repository documentation
 │   ├── architecture.md
+│   ├── security.md
 │   └── structure.md
 │
 └── .github/workflows/         # CI/CD automation pipelines
