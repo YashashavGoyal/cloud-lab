@@ -125,7 +125,7 @@ cloudlab/
 │   │   ├── database/                  # [Implemented] RDS PostgreSQL Multi-AZ, Parameter Group, Secrets Manager
 │   │   ├── alb/                       # [Implemented] Application Load Balancer, Target Group, HTTP Listener
 │   │   ├── storage/                   # [Implemented] Amazon S3 Bucket, Public Access Block, Versioning & Lifecycle
-│   │   └── monitoring/                # [Active Development] CloudWatch Log Groups, Metric Alarms, SNS Alerts
+│   │   └── monitoring/                # [Implemented] CloudWatch Log Groups, Metric Alarms, SNS Alerts
 │   │
 │   └── environments/                  # Environment deployment orchestrators
 │       ├── dev/                       # [Active Development] Dev environment entrypoint (main.tf, tfvars)
@@ -152,7 +152,7 @@ cloudlab/
 | **`database`** | `private_db_subnet_ids`, `db_security_group_id`, `instance_class` | `db_instance_endpoint`, `db_instance_address`, `db_secretsmanager_secret_arn` | Deploys Multi-AZ RDS PostgreSQL with SSL enforcement & Secrets Manager integration. |
 | **`alb`** | `vpc_id`, `public_subnet_ids`, `alb_security_group_id`, `ec2_instance_ids` | `alb_dns_name`, `alb_arn`, `target_group_arn` | Provides public HTTP load balancing, health checks, and connection draining. |
 | **`storage`** | `environment`, `bucket_prefix`, `enable_versioning` | `s3_bucket_id`, `s3_bucket_arn`, `s3_bucket_domain_name` | Provisions private encrypted S3 bucket with Glacier cold storage archiving. |
-| **`monitoring`** | `environment`, `alb_arn`, `ec2_instance_ids` | `cloudwatch_log_group_arn`, `sns_topic_arn` | *(In Progress)* Configures metric alarms (CPU, 5xx errors) and log retention. |
+| **`monitoring`** | `environment`, `log_retention_days`, `alert_email` | `sns_topic_arn`, `ec2_log_group_arn`, `alb_log_group_arn` | Configures CloudWatch metric alarms (CPU, 5xx, Storage) and log retention. |
 
 ---
 
