@@ -67,12 +67,12 @@ module "database" {
 module "alb" {
   source = "../../modules/alb"
 
-  environment                 = var.environment
-  vpc_id                      = module.networking.vpc_id
-  public_subnet_ids           = module.networking.public_subnet_ids
-  alb_security_group_id       = module.security.alb_security_group_id
-  ec2_instance_ids            = module.compute.instance_ids
-  app_port                    = var.app_port
+  environment                = var.environment
+  vpc_id                     = module.networking.vpc_id
+  public_subnet_ids          = module.networking.public_subnet_ids
+  alb_security_group_id      = module.security.alb_security_group_id
+  ec2_instance_ids           = module.compute.instance_ids
+  app_port                   = var.app_port
   enable_deletion_protection = var.deletion_protection
 
   tags = var.tags

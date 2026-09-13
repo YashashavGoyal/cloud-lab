@@ -1,0 +1,58 @@
+name: "Terraform Lint & Validate"
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+    paths:
+      - "infra/**"
+      - ".github/workflows/terraform-lint.yml"
+  pull_request:
+    branches: [ "main", "develop" ]
+    paths:
+      - "infra/**"
+      - ".github/workflows/terraform-lint.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  format:
+    name: "Terraform Format Check"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.7
+
+      - name: Check Formatting
+        run: terraform fmt -check -recursive infra/
+
+  validate:
+    name: "Validate Stack (${{ matrix.environment }})"
+    runs-on: ubuntu-latest
+    needs: format
+    strategy:
+      matrix:
+        environment: [dev, staging, prod]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.7
+
+      - name: Initialize Environment Stack
+        run: terraform init -backend=false
+        working-directory: infra/environments/${{ matrix.environment }}
+
+      - name: Validate Environment Stack
+        run: terraform validate
+        working-directory: infra/environments/${{ matrix.environment }}

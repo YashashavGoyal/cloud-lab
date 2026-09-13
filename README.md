@@ -111,6 +111,11 @@ flowchart TD
 * **AWS Secrets Manager**: Database passwords generated cryptographically via `random_password` are stored as JSON secrets in AWS Secrets Manager.
 * **Encryption at Rest & Transit**: Enforces AES256 / KMS storage encryption across EBS root volumes, S3 storage buckets, and PostgreSQL parameters (`rds.force_ssl = 1`).
 
+### 5. Automated GitHub Actions CI/CD Pipelines
+* **`terraform-lint.yml`**: Automates `terraform fmt -check` and `terraform validate` across `dev`, `staging`, and `prod` stacks.
+* **`terraform-plan.yml`**: Generates speculative execution plans on Pull Requests targeting `main` and posts formatted comments to PR threads.
+* **`terraform-apply.yml`**: Automated continuous deployment to `dev` on push to `main` with environment protection gates for `staging` and `prod`.
+
 ---
 
 ## 📁 Repository Directory Structure
@@ -137,7 +142,7 @@ cloudlab/
 │   ├── security.md                    # Zero-Trust security perimeter & IAM policy specs
 │   └── structure.md                   # Repository design standards
 │
-└── .github/workflows/                 # [Planned] CI/CD Automation Pipelines (Lint, Plan, Apply)
+└── .github/workflows/                 # [Implemented] GitHub Actions CI/CD Pipelines (terraform-lint, terraform-plan, terraform-apply)
 ```
 
 ---
