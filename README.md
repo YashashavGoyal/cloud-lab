@@ -128,9 +128,9 @@ cloudlab/
 │   │   └── monitoring/                # [Implemented] CloudWatch Log Groups, Metric Alarms, SNS Alerts
 │   │
 │   └── environments/                  # Environment deployment orchestrators
-│       ├── dev/                       # [Active Development] Dev environment entrypoint (main.tf, tfvars)
-│       ├── staging/                   # [Planned] Staging deployment stack
-│       └── prod/                      # [Planned] Production deployment stack with S3/DynamoDB remote state
+│       ├── dev/                       # [Implemented] Dev environment stack (Single shared NAT GW)
+│       ├── staging/                   # [Implemented] Staging environment stack (Multi-AZ NAT GWs)
+│       └── prod/                      # [Implemented] Production environment stack (Multi-AZ NAT GWs & Deletion Protection)
 │
 ├── docs/                              # Architecture specifications & infrastructure standards
 │   ├── architecture.md                # 5-stage network & subnet blueprint
@@ -213,5 +213,4 @@ cloudlab/
 ## 📝 License & Author
 
 * **Author**: [Yashashav Goyal](https://github.com/YashashavGoyal)
-* **License**: MIT License
-
+* **License**: [MIT License](LICENSE)
