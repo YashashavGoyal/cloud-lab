@@ -53,12 +53,13 @@ module "compute" {
 module "database" {
   source = "../../modules/database"
 
-  environment           = var.environment
-  private_db_subnet_ids = module.networking.private_db_subnet_ids
-  db_security_group_id  = module.security.db_security_group_id
-  instance_class        = var.db_instance_class
-  skip_final_snapshot   = false
-  deletion_protection   = var.deletion_protection
+  environment             = var.environment
+  private_db_subnet_ids   = module.networking.private_db_subnet_ids
+  db_security_group_id    = module.security.db_security_group_id
+  instance_class          = var.db_instance_class
+  skip_final_snapshot     = false
+  deletion_protection     = var.deletion_protection
+  backup_retention_period = 7
 
   tags = var.tags
 }
