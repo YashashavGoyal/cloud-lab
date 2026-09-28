@@ -1,11 +1,6 @@
 name: "Terraform Apply"
 
 on:
-  push:
-    branches: [ "main" ]
-    paths:
-      - "infra/**"
-      - ".github/workflows/terraform-apply.yml"
   workflow_dispatch:
     inputs:
       environment:
@@ -17,11 +12,9 @@ on:
           - dev
           - staging
           - prod
-      auto_approve:
-        description: "Auto-approve apply step"
-        required: true
-        type: boolean
-        default: true
+  push:
+    tags:
+      - "v*"
 
 permissions:
   contents: read
@@ -29,7 +22,9 @@ permissions:
 jobs:
   apply-dev:
     name: "Apply Development Stack"
-    if: github.event_name == 'push' || inputs.environment == 'dev'
+    if: |
+      (github.event_name == 'workflow_dispatch' && inputs.environment == 'dev') ||
+      (startsWith(github.ref, 'refs/tags/v') && (contains(github.ref, '-dev') || !contains(github.ref, '-')))
     runs-on: ubuntu-latest
     environment: dev
 
@@ -59,7 +54,16 @@ jobs:
 
   apply-staging:
     name: "Apply Staging Stack"
-    if: inputs.environment == 'staging'
+    needs: [apply-dev]
+    if: |
+      always() &&
+      !cancelled() &&
+      (needs.apply-dev.result == 'success' || needs.apply-dev.result == 'skipped') &&
+      (
+        (github.event_name == 'workflow_dispatch' && inputs.environment == 'staging') ||
+        (startsWith(github.ref, 'refs/tags/v') && (contains(github.ref, '-stage') || contains(github.ref, '-rc'))) ||
+        (startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, '-') && needs.apply-dev.result == 'success')
+      )
     runs-on: ubuntu-latest
     environment: staging
 
@@ -89,7 +93,15 @@ jobs:
 
   apply-prod:
     name: "Apply Production Stack"
-    if: inputs.environment == 'prod'
+    needs: [apply-staging]
+    if: |
+      always() &&
+      !cancelled() &&
+      (needs.apply-staging.result == 'success' || needs.apply-staging.result == 'skipped') &&
+      (
+        (github.event_name == 'workflow_dispatch' && inputs.environment == 'prod') ||
+        (startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, '-') && needs.apply-staging.result == 'success')
+      )
     runs-on: ubuntu-latest
     environment: prod
 
