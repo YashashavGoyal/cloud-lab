@@ -67,6 +67,12 @@ variable "deletion_protection" {
   default     = false
 }
 
+variable "backup_retention_period" {
+  description = "The days to retain automated backups for (Free tier allows max 1 day)"
+  type        = number
+  default     = 1
+}
+
 variable "tags" {
   description = "Resource tags"
   type        = map(string)
