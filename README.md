@@ -121,13 +121,57 @@ flowchart TD
 ## 📸 Deployment & Verification Screenshots
 
 > [!NOTE]
-> Below are empirical runtime proof screenshots from local execution and AWS Console resource deployment.
+> Below are empirical runtime proof screenshots from live AWS deployment and local Terraform execution. See [docs/images/README.md](docs/images/README.md) for the complete screenshots directory catalog.
+
+### 🌟 Core Deployment Milestones
 
 | Verification Stage | Screenshot Preview | Description |
 | :--- | :--- | :--- |
-| **1. Terraform Execution** | ![Terraform Apply Output](docs/images/terraform_apply_output.png) | Successful `terraform apply` execution terminal log in `infra/environments/dev`. |
-| **2. AWS Infrastructure Console** | ![AWS Console Resources](docs/images/aws_console_resources.png) | Provisioned EC2 Instances, Multi-AZ RDS PostgreSQL, Secrets Manager secret, and ALB. |
-| **3. Application Load Balancer Response** | ![ALB Endpoint Response](docs/images/alb_response.png) | Successful HTTP 200 OK health check response via public ALB DNS endpoint. |
+| **1. Terraform Execution** | [![Terraform Apply](docs/images/terraform_success_from_terminal.png)](docs/images/terraform_success_from_terminal.png) | Successful `terraform apply` execution terminal log in `infra/environments/dev` provisioning 52 resources. |
+| **2. Live Application via ALB** | [![Live ALB Response](docs/images/website_preview_from_alb_dns.png)](docs/images/website_preview_from_alb_dns.png) | Live browser access to `http://<alb-dns-name>` showing HTTP 200 OK NGINX container response. |
+| **3. VPC Network Topology** | [![VPC Resource Map](docs/images/aws_vpc_resource_map.png)](docs/images/aws_vpc_resource_map.png) | AWS Console Resource Map showing 6 isolated subnets across 2 AZs, 5 route tables, IGW, and NAT GW. |
+| **4. ALB Routing & Target Health** | [![ALB Resource Map](docs/images/aws_alb_resource_map.png)](docs/images/aws_alb_resource_map.png) | HTTP:80 Listener -> Routing Rule -> Target Group -> 2 Healthy Multi-AZ EC2 instances. |
+
+<details>
+<summary><b>🔍 Expand Detailed AWS Console Verification by Architectural Tier (11 Additional Proofs)</b></summary>
+<br/>
+
+#### 1. Compute & Containers Tier
+| Component | Screenshot | Description |
+| :--- | :--- | :--- |
+| **EC2 Multi-AZ Instances** | [![EC2 Instances](docs/images/aws_ec2_instances.png)](docs/images/aws_ec2_instances.png) | Both app instances (`cloudlab-dev-app-ec2-1` and `cloudlab-dev-app-ec2-2`) active across `us-east-1a` & `us-east-1b` with private-only IPs and 3/3 checks passed. |
+
+#### 2. Database Tier
+| Component | Screenshot | Description |
+| :--- | :--- | :--- |
+| **RDS PostgreSQL Multi-AZ** | [![RDS Database](docs/images/aws_db.png)](docs/images/aws_db.png) | Provisioned `cloudlab-dev-postgres` instance running PostgreSQL on `db.t4g.micro` with public accessibility disabled. |
+
+#### 3. Security Tier
+| Component | Screenshot | Description |
+| :--- | :--- | :--- |
+| **Zero-Trust Security Groups** | [![Security Groups](docs/images/aws_security_groups.png)](docs/images/aws_security_groups.png) | Chained firewalls (`ALB SG -> EC2 SG -> DB SG`) with zero egress allowed from database instances. |
+
+#### 4. Load Balancing Tier
+| Component | Screenshot | Description |
+| :--- | :--- | :--- |
+| **ALB Configuration** | [![ALB Details](docs/images/aws_alb.png)](docs/images/aws_alb.png) | Internet-facing Application Load Balancer active with dual-AZ public subnet mappings. |
+| **Target Group** | [![Target Group](docs/images/aws_target_group.png)](docs/images/aws_target_group.png) | Target group (`cloudlab-dev-app-tg`) on port 8080 showing 2 healthy registered targets. |
+
+#### 5. Networking Tier
+| Component | Screenshot | Description |
+| :--- | :--- | :--- |
+| **VPC Configuration** | [![VPC Details](docs/images/aws_vpc.png)](docs/images/aws_vpc.png) | VPC `cloudlab-dev-vpc` (`10.0.0.0/16`) with DNS resolution and DNS hostnames enabled. |
+| **Route Tables** | [![Route Tables](docs/images/aws_route_tables.png)](docs/images/aws_route_tables.png) | Partitioned route tables for public, private app (via NAT), and private DB subnets. |
+| **NAT Gateway** | [![NAT Gateway](docs/images/aws_nat_gw.png)](docs/images/aws_nat_gw.png) | Managed NAT Gateway in public subnet AZ-1 with dedicated Elastic IP for outbound updates. |
+| **Internet Gateway** | [![Internet Gateway](docs/images/aws_ig.png)](docs/images/aws_ig.png) | Attached Internet Gateway providing public ingress to the ALB. |
+
+#### 6. Monitoring & Alerting Tier
+| Component | Screenshot | Description |
+| :--- | :--- | :--- |
+| **CloudWatch Alarms** | [![CloudWatch Alarms](docs/images/aws_cloudwatch_alarms.png)](docs/images/aws_cloudwatch_alarms.png) | Metric alarms for EC2 CPU utilization, ALB 5xx errors, and RDS free storage. |
+| **SNS Alert Topic** | [![SNS Subscription](docs/images/aws_sns_topic_subscription.png)](docs/images/aws_sns_topic_subscription.png) | Confirmed email subscription for real-time infrastructure alarm notifications. |
+
+</details>
 
 ---
 
