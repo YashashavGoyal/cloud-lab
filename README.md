@@ -118,6 +118,19 @@ flowchart TD
 
 ---
 
+## 📸 Deployment & Verification Screenshots
+
+> [!NOTE]
+> Below are empirical runtime proof screenshots from local execution and AWS Console resource deployment.
+
+| Verification Stage | Screenshot Preview | Description |
+| :--- | :--- | :--- |
+| **1. Terraform Execution** | ![Terraform Apply Output](docs/images/terraform_apply_output.png) | Successful `terraform apply` execution terminal log in `infra/environments/dev`. |
+| **2. AWS Infrastructure Console** | ![AWS Console Resources](docs/images/aws_console_resources.png) | Provisioned EC2 Instances, Multi-AZ RDS PostgreSQL, Secrets Manager secret, and ALB. |
+| **3. Application Load Balancer Response** | ![ALB Endpoint Response](docs/images/alb_response.png) | Successful HTTP 200 OK health check response via public ALB DNS endpoint. |
+
+---
+
 ## 📁 Repository Directory Structure
 
 ```text
